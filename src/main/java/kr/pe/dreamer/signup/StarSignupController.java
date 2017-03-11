@@ -1,5 +1,7 @@
 package kr.pe.dreamer.signup;
 
+import java.sql.DriverManager;
+
 import javax.servlet.http.HttpServletRequest;
 
 import org.apache.log4j.Logger;
@@ -10,6 +12,7 @@ import org.springframework.web.bind.annotation.RequestMethod;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.ResponseBody;
 
+import java.sql.*;
 @Controller
 public class StarSignupController {
 	private static final Logger logger = Logger.getLogger(StarSignupController.class);
@@ -21,6 +24,56 @@ public class StarSignupController {
 		System.out.println(dto.getInputName());
 		System.out.println(dto.getInputPassword());
 		System.out.println(dto.getInputPhone());
+		
+		
+		java.sql.Connection conn = null;
+		PreparedStatement stmt=null;
+
+		String USER = "root";
+		String PW = "dhqjtmxk";
+		
+		try{
+			
+			Class.forName("com.mysql.jdbc.Driver");
+			conn = DriverManager.getConnection("jdbc:mysql://192.168.35.253:5678/startalk", USER,PW);
+
+			String sql = "insert into profile values(?,?,?,?)";
+
+			PreparedStatement ps = conn.prepareStatement(sql);
+
+			ps.setString(1, dto.getInputId());
+			ps.setString(2, dto.getInputPassword());
+			ps.setString(3, dto.getInputName());
+			ps.setString(4, dto.getInputPhone());
+			ps.executeUpdate();
+			System.out.println(ps.toString());
+			ps.close();
+			conn.close();
+		}catch(Exception e){
+			e.printStackTrace();
+		}
+
 		return null;
 	}
 }
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
